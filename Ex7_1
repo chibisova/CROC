@@ -1,0 +1,142 @@
+package croc.ex7_1;
+
+
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
+
+public class Theatre {
+  // место в зале
+  public static class Seat {
+    // номер ряда
+    final int row;
+    // номер места
+    final int seat;
+    // свободно или занято
+    boolean free;
+
+    Seat(int row, int seat, boolean free) {
+      this.row = row;
+      this.seat = seat;
+      this.free = free;
+    }
+  }
+
+  // сеанс
+  public static class Showtime {
+
+    // возвращает набор мест, доступных для бронирования
+    // на текущий сеанс
+    public static Set<Seat> getFreeSeats(Set<Seat> allSeat) {
+      HashSet<Seat> freeSeat = new HashSet<>();
+      System.out.println("Свободные места:");
+      for (Seat place : allSeat) {
+        if (place.free) freeSeat.add(place);
+      }
+      return freeSeat;
+    }
+
+    // бронирует место на текущий сеанс;
+    // возвращает true, если место успешно забронировано
+    // или false, если бронирование не удалось
+    // (кто-то успел раньше)
+    public static boolean bookSeat(Seat seat) {
+      synchronized (seat) {
+        if (seat.free) {
+          seat.free = false;
+          System.out.println("Бронирование успешно");
+          return true;
+        } else {
+          System.out.println("Извините, место уже занято");
+          return false;
+        }
+      }
+    }
+  }
+
+  public static void main(String[] args) {
+    
+    //создаем сеанс
+    Scanner in = new Scanner(System.in);
+    Seat cat1 = new Seat(1, 1, true);
+    Seat cat2 = new Seat(1, 2, true);
+    Seat cat3 = new Seat(2, 3, true);
+    Seat cat4 = new Seat(4, 5, true);
+    Seat cat5 = new Seat(6, 7, false);
+    HashSet<Seat> newSeats = new HashSet<>();
+    newSeats.add(cat1);
+    newSeats.add(cat2);
+    newSeats.add(cat3);
+    newSeats.add(cat4);
+    newSeats.add(cat5);
+    
+    //все свободные
+    Set<Seat> freeSeats = (Set<Seat>) Showtime.getFreeSeats(newSeats);
+    for (Seat sseat : freeSeats) {
+      System.out.println("Ряд: " + sseat.row + ", Место: " + sseat.seat);
+    }
+
+    //занимаем места
+    Thread test1 = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        System.out.println("Занимаем место: Ряд " + cat1.row + ", Место " + cat1.seat);
+        boolean book = Theatre.Showtime.bookSeat(cat1);
+        if (!book) {
+          Set<Theatre.Seat> freeSeats2 = (Set<Theatre.Seat>) Theatre.Showtime.getFreeSeats(newSeats);
+          for (Theatre.Seat sseat : freeSeats2) {
+            System.out.println("Ряд: " + sseat.row + ", Место: " + sseat.seat);
+          }
+        }
+      }
+    });
+
+    Thread test2 = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        System.out.println("Занимаем место: Ряд " + cat1.row + ", Место " + cat1.seat);
+        boolean book = Theatre.Showtime.bookSeat(cat1);
+        if (!book) {
+          Set<Theatre.Seat> freeSeats2 = (Set<Theatre.Seat>) Theatre.Showtime.getFreeSeats(newSeats);
+          for (Theatre.Seat sseat : freeSeats2) {
+            System.out.println("Ряд: " + sseat.row + ", Место: " + sseat.seat);
+          }
+        }
+      }
+    });
+
+    Thread test3 = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        System.out.println("Занимаем место: Ряд " + cat2.row + ", Место " + cat2.seat);
+        boolean book = Theatre.Showtime.bookSeat(cat2);
+        if (!book) {
+          Set<Theatre.Seat> freeSeats2 = (Set<Theatre.Seat>) Theatre.Showtime.getFreeSeats(newSeats);
+          for (Theatre.Seat sseat : freeSeats2) {
+            System.out.println("Ряд: " + sseat.row + ", Место: " + sseat.seat);
+          }
+        }
+      }
+    });
+
+    Thread test4 = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        System.out.println("Занимаем место: Ряд " + cat5.row + ", Место " + cat5.seat);
+        boolean book = Theatre.Showtime.bookSeat(cat5);
+        if (!book) {
+          Set<Theatre.Seat> freeSeats2 = (Set<Theatre.Seat>) Theatre.Showtime.getFreeSeats(newSeats);
+          for (Theatre.Seat sseat : freeSeats2) {
+            System.out.println("Ряд: " + sseat.row + ", Место: " + sseat.seat);
+          }
+        }
+      }
+    });
+    
+    test1.start();
+    test2.start();
+    test3.start();
+    test4.start();
+    
+  }
+}
