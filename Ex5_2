@@ -1,0 +1,33 @@
+package croc.ex5_2;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class CallCentre {
+  public static void main(String[] args) throws IOException {
+    Scanner in = new Scanner(System.in);
+    String path = in.nextLine();
+    try (Scanner r = new Scanner(new FileReader(path))) {
+
+      Map<String, Integer> workers = new HashMap<>();
+      int finalTime = 0;
+
+      while (r.hasNextLine()) {
+        String[] worker = r.nextLine().split(",");
+        int call = Integer.parseInt(worker[1]) - Integer.parseInt(worker[0]);
+        if (workers.containsKey(worker[2]))
+          workers.put(worker[2], workers.get(worker[2]) + call);
+        else workers.put(worker[2], call);
+      }
+
+      for (int value : workers.values()) {
+        finalTime += value;
+      }
+      System.out.println(finalTime/workers.size());
+
+    }
+  }
+}
