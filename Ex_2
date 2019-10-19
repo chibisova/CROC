@@ -1,0 +1,79 @@
+package croc.ex2;
+
+import static java.lang.Math.abs;
+
+public class HSV extends Color{
+
+  private int h;
+  private int s;
+  private int v;
+
+  public HSV(int h, int s, int v) {
+    if (h >= 0 && h <= 360) {
+      this.h = h;
+    }
+    if (s >= 0 && s <= 100) {
+      this.s = s;
+    }
+    if (v >= 0 && v <= 100) {
+      this.v = v;
+    }
+  }
+
+  public int getH() {
+    return h;
+  }
+
+  public int getS() {
+    return s;
+  }
+
+  public int getV() {
+    return v;
+  }
+
+  public void setH(int h) {
+    this.h = h;
+  }
+
+  public void setS(int s) {
+    this.s = s;
+  }
+
+  public void setV(int v) {
+    this.v = v;
+  }
+
+  public void setHSV(int h, int s, int v) {
+    this.h = h;
+    this.s = s;
+    this.v = v;
+  }
+
+  public RGB HSVToRGB(int h, int s, int v) {
+    int Hi = abs(h / 60) % 6;
+    double Vmin = (100 - s) * v / 100;
+    double a = (v - Vmin) * (h % 60) / 60;
+    double Vinc = Vmin + a;
+    double Vdec = v - a;
+    if (Hi == 0) {
+      RGB HSVRGB = new RGB(v, Vinc, Vmin);
+      return HSVRGB;
+    } else if (Hi == 1) {
+      RGB HSVRGB = new RGB(Vdec, v, Vmin);
+      return HSVRGB;
+    } else if (Hi == 2) {
+      RGB HSVRGB = new RGB(Vmin, v, Vinc);
+      return HSVRGB;
+    } else if (Hi == 3) {
+      RGB HSVRGB = new RGB(Vmin, Vdec, v);
+      return HSVRGB;
+    } else if (Hi == 4) {
+      RGB HSVRGB = new RGB(Vinc, Vmin, v);
+      return HSVRGB;
+    } else {
+      RGB HSVRGB = new RGB(v, Vmin, Vdec);
+      return HSVRGB;
+    }
+  }
+}
