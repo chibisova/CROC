@@ -1,0 +1,33 @@
+package croc;
+
+import java.util.Scanner;
+
+public class Croc1 {
+    public static void main(String[] args) {
+      Scanner in = new Scanner(System.in);
+      System.out.println("Enter the coordinates of the first point");
+      double x1 = in.nextDouble();
+      double y1 = in.nextDouble();
+      Point a = new Point(x1, y1);
+      System.out.println("Enter the coordinates of the second point");
+      double x2 = in.nextDouble();
+      double y2 = in.nextDouble();
+      Point b = new Point(x2, y2);
+      System.out.println("Enter the coordinates of the third point");
+      double x3 = in.nextDouble();
+      double y3 = in.nextDouble();
+      Point c = new Point(x3, y3);
+      double s1 = Math.abs(a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) / 2.0;
+      System.out.println("Area of the triangle = " + s1);
+    }
+}
+
+class Point {
+  double x;
+  double y;
+
+  public Point(double x, double y) {
+    this.x = x;
+    this.y = y;
+  }
+}
