@@ -1,0 +1,199 @@
+package croc.ex7_2;
+
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.*;
+
+public class Rings {
+
+  private static String getBestWorker(List<String> logs) {
+    synchronized (logs) {
+      int max = 0;
+      int kol;
+      String bestWorker = "";
+      HashMap<String, Integer> workers = new HashMap<>();
+
+      for (String ring : logs) {
+        String[] worker = ring.split(",");
+        if (!(workers.containsKey(worker[2]))) {
+          kol = 0;
+          workers.put(worker[2], kol);
+        } else {
+          kol = workers.get(worker[2]) + 1;
+          workers.put(worker[2], kol);
+          if (kol > max) max = kol;
+        }
+      }
+      for (String o : workers.keySet()) {
+        if (workers.get(o).equals(max)) {
+          bestWorker = (o + "," + ++max);
+        }
+      }
+      return bestWorker;
+    }
+  }
+
+
+  public static void main(String[] args) throws InterruptedException {
+    //считываем файл с путями остальных файлов
+    Scanner in = new Scanner(System.in);
+    String weeklogs = in.nextLine();
+    List<String> logs = new ArrayList<>();
+    try (Scanner r = new Scanner(new FileReader(weeklogs))) {
+      while (r.hasNextLine()) {
+        logs.add(r.nextLine());
+      }
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    System.out.println("Выбор лучшего оператора");
+    List<String> bestWork = new ArrayList<>();
+
+    Thread day1 = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        List<String> daylogs = new ArrayList<>();
+        try (Scanner r = new Scanner(new FileReader(logs.get(0)))) {
+          while (r.hasNextLine()) {
+            daylogs.add(r.nextLine());
+          }
+        } catch (FileNotFoundException e) {
+          e.printStackTrace();
+        }
+        String best = (String) Rings.getBestWorker(daylogs);
+        System.out.println("Лучший 1 дня: " + best);
+        bestWork.add(best);
+      }
+    });
+
+    Thread day2 = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        List<String> daylogs = new ArrayList<>();
+        try (Scanner r = new Scanner(new FileReader(logs.get(1)))) {
+          while (r.hasNextLine()) {
+            daylogs.add(r.nextLine());
+          }
+        } catch (FileNotFoundException e) {
+          e.printStackTrace();
+        }
+        String best = (String) Rings.getBestWorker(daylogs);
+        System.out.println("Лучший 2 дня: " + best);
+        bestWork.add(best);
+      }
+    });
+
+    Thread day3 = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        List<String> daylogs = new ArrayList<>();
+        try (Scanner r = new Scanner(new FileReader(logs.get(2)))) {
+          while (r.hasNextLine()) {
+            daylogs.add(r.nextLine());
+          }
+        } catch (FileNotFoundException e) {
+          e.printStackTrace();
+        }
+        String best = (String) Rings.getBestWorker(daylogs);
+        System.out.println("Лучший 3 дня: " + best);
+        bestWork.add(best);
+      }
+    });
+
+    Thread day4 = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        List<String> daylogs = new ArrayList<>();
+        try (Scanner r = new Scanner(new FileReader(logs.get(3)))) {
+          while (r.hasNextLine()) {
+            daylogs.add(r.nextLine());
+          }
+        } catch (FileNotFoundException e) {
+          e.printStackTrace();
+        }
+        String best = (String) Rings.getBestWorker(daylogs);
+        System.out.println("Лучший 4 дня: " + best);
+        bestWork.add(best);
+      }
+    });
+
+    Thread day5 = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        List<String> daylogs = new ArrayList<>();
+        try (Scanner r = new Scanner(new FileReader(logs.get(4)))) {
+          while (r.hasNextLine()) {
+            daylogs.add(r.nextLine());
+          }
+        } catch (FileNotFoundException e) {
+          e.printStackTrace();
+        }
+        String best = (String) Rings.getBestWorker(daylogs);
+        System.out.println("Лучший 5 дня: " + best);
+        bestWork.add(best);
+      }
+    });
+
+    Thread day6 = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        List<String> daylogs = new ArrayList<>();
+        try (Scanner r = new Scanner(new FileReader(logs.get(5)))) {
+          while (r.hasNextLine()) {
+            daylogs.add(r.nextLine());
+          }
+        } catch (FileNotFoundException e) {
+          e.printStackTrace();
+        }
+        String best = (String) Rings.getBestWorker(daylogs);
+        System.out.println("Лучший 6 дня: " + best);
+        bestWork.add(best);
+      }
+    });
+
+    Thread day7 = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        List<String> daylogs = new ArrayList<>();
+        try (Scanner r = new Scanner(new FileReader(logs.get(6)))) {
+          while (r.hasNextLine()) {
+            daylogs.add(r.nextLine());
+          }
+        } catch (FileNotFoundException e) {
+          e.printStackTrace();
+        }
+        String best = (String) Rings.getBestWorker(daylogs);
+        System.out.println("Лучший 7 дня: " + best);
+        bestWork.add(best);
+      }
+    });
+
+    day1.start();
+    day2.start();
+    day3.start();
+    day4.start();
+    day5.start();
+    day6.start();
+    day7.start();
+
+    day1.join(10000);
+    day2.join(10000);
+    day3.join(10000);
+    day4.join(10000);
+    day5.join(10000);
+    day6.join(10000);
+    day7.join(10000);
+
+    HashMap<String, Integer> workers = new HashMap<>();
+    for (String s : bestWork) {
+      String[] worker = s.split(",");
+      if (workers.containsKey(worker[0])) {
+        workers.put(worker[0], workers.get(worker[0]) + Integer.parseInt(worker[1]));
+      } else workers.put(worker[0], Integer.parseInt(worker[1]));
+    }
+
+    System.out.println("Оператор недели: " + Collections.max(workers.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey());
+  }
+}
