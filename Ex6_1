@@ -1,0 +1,45 @@
+package croc.ex6_1;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class CallCentreSort {
+  public static void main(String[] args) throws IOException {
+    String path = args[0];
+    try (Scanner r = new Scanner(new FileReader(path))) {
+
+      Map<String, String> maxCall = new HashMap<>();
+      maxCall.put("max1", "0,0,max1");
+      maxCall.put("max2", "0,0,max2");
+      maxCall.put("max3", "0,0,max3");
+
+      while (r.hasNextLine()) {
+        String[] worker = r.nextLine().split(",");
+        int call = Integer.parseInt(worker[1]) - Integer.parseInt(worker[0]);
+        String[] m1 = (maxCall.get("max1").split(","));
+        String[] m2 = (maxCall.get("max2").split(","));
+        String[] m3 = (maxCall.get("max3").split(","));
+
+        if (call > Integer.parseInt(m1[1]) - Integer.parseInt(m1[0])) {
+          maxCall.put("max3", maxCall.get("max2"));
+          maxCall.put("max2", maxCall.get("max1"));
+          maxCall.put("max1", worker[0] + "," + worker[1] + "," + worker[2]);
+        } else if ((call > Integer.parseInt(m2[1]) - Integer.parseInt(m2[0])) || 
+                (call == Integer.parseInt(m1[1]) - Integer.parseInt(m1[0]))) {
+          maxCall.put("max3", maxCall.get("max2"));
+          maxCall.put("max2", worker[0] + "," + worker[1] + "," + worker[2]);
+        } else if (call >= Integer.parseInt(m3[1]) - Integer.parseInt(m3[0]) || 
+                (call == Integer.parseInt(m2[1]) - Integer.parseInt(m2[0]))) {
+          maxCall.put("max3", worker[0] + "," + worker[1] + "," + worker[2]);
+        }
+      }
+      
+      System.out.println(maxCall.get("max1"));
+      System.out.println(maxCall.get("max2"));
+      System.out.println(maxCall.get("max3"));
+      }
+    }
+  }
