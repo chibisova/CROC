@@ -1,0 +1,48 @@
+package croc.ex4_3;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Phones2 {
+  public static void main(String[] args) throws IOException {
+    String path = args[0];
+    try (BufferedReader r = new BufferedReader(new FileReader(path))) {
+      String line;
+      ArrayList<String> nums = new ArrayList<String>();
+      ArrayList<Integer> sec = new ArrayList<>();
+      while ((line = r.readLine()) != null) {
+        nums.add(line);
+      }
+
+      for (int i = 0; i < nums.size(); i++) {
+        for (String retval : nums.get(i).split(",")) {
+          sec.add(Integer.parseInt(retval));
+        }
+      }
+
+      ArrayList<Integer> times = new ArrayList<>();
+
+      for (int i = 0; i < sec.size(); i = i + 2) { //идем по каждому отрезку времени
+        int kol = 0;
+        ArrayList<Integer> listNums = new ArrayList<>();
+        for (int j = sec.get(i); j <= sec.get(i + 1); j++) { // идем по промежутку этого времени
+          for (int t = 0; t < sec.size(); t = t + 2) { // брем каждый отрезок времени
+            for (int m = sec.get(t); m <= sec.get(t+1); m++) {
+              listNums.add(m);
+            }
+            if (listNums.contains(sec.get(i))) {
+              kol = kol + 1;
+            }
+            listNums.clear();
+          }
+          times.add(kol);
+          kol = 0;
+        }
+      }
+      System.out.println(Collections.max(times));
+    }
+  }
+}
